@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.8-slim buster
 
 WORKDIR /app
 
@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "flask_api/main.py"]
+CMD ["python", "main.py"]
