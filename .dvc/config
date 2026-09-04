@@ -1,0 +1,7 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/ansh777.tomar/Youtube-Sentiment.dvc
+    auth = basic
+    user = ansh777.tomar
+    password = 3d6fcf63f8b6e2d8a9c32de1a6e18033f5d8b3c0
