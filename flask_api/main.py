@@ -72,9 +72,8 @@ def load_model_and_vectorizer(model_name, model_version, vectorizer_path):
 model, vectorizer = load_model_and_vectorizer(
     "my_model",
     "1",
-    "../tfidf_vectorizer.pkl"
+    "tfidf_vectorizer.pkl"
 )
-
 
 @app.route('/')
 def home():
