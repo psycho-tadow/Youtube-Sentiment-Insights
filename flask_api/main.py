@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 from flask_cors import CORS
 import io
 import matplotlib.pyplot as plt
@@ -77,7 +77,7 @@ model, vectorizer = load_model_and_vectorizer(
 
 @app.route('/')
 def home():
-    return "Welcome to our flask api"
+    return render_template('index.html')
 
 
 @app.route('/predict_with_timestamps', methods=['POST'])
@@ -290,7 +290,7 @@ def generate_wordcloud():
             img_io,
             format='PNG'
         )
-
+    
         img_io.seek(0)
 
         return send_file(
