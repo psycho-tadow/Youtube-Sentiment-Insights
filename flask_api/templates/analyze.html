@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyze a video — Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="{{ url_for('landing') }}" class="site-nav-mark">Signal</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="site-nav-links" id="navLinks">
+    <a href="{{ url_for('analyze_page') }}" class="active">Analyzer</a>
+    <a href="{{ url_for('about_page') }}">How it works</a>
+    <a href="https://github.com/psycho-tadow/Youtube-Sentiment-Insights" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<div class="app">
+
+  <header class="masthead masthead-compact">
+    <div class="masthead-mark">Analyze a video</div>
+    <p class="masthead-sub">Paste a link, get a full sentiment read on the comments.</p>
+  </header>
+
+  <div class="layout">
+
+    <aside class="control-panel">
+      <h2>Analyze a video</h2>
+
+      <div class="field">
+        <label for="videoUrl">YouTube video URL</label>
+        <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+
+      <div class="field">
+        <label for="apiKey">YouTube Data API key</label>
+        <input id="apiKey" type="password" placeholder="AIza...">
+        <p class="hint">Free from the <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener">Google Cloud Console</a>. Stored only in your browser.</p>
+      </div>
+
+      <div class="field">
+        <label for="maxComments">Comments to pull</label>
+        <select id="maxComments">
+          <option value="50">50</option>
+          <option value="100" selected>100</option>
+          <option value="200">200</option>
+          <option value="500">500</option>
+        </select>
+      </div>
+
+      <button id="analyzeBtn" type="button">Analyze comments</button>
+
+      <div id="status" class="status" role="status"></div>
+    </aside>
+
+    <main class="results" id="results" hidden>
+
+      <section class="summary" id="summary"></section>
+
+      <section class="visuals">
+        <div class="visual-card">
+          <h3>Sentiment split</h3>
+          <img id="chartImg" alt="Sentiment split chart">
+        </div>
+        <div class="visual-card">
+          <h3>Frequent words</h3>
+          <img id="wordcloudImg" alt="Word cloud of comments">
+        </div>
+      </section>
+
+      <section class="trend-section" id="trendSection" hidden>
+        <h3>Sentiment over time</h3>
+        <img id="trendImg" alt="Sentiment trend over time">
+      </section>
+
+      <section class="comments-section">
+        <div class="comments-head">
+          <h3>Comments</h3>
+          <div class="filter-row" id="filterRow">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="1">Positive</button>
+            <button class="filter-pill" data-filter="0">Neutral</button>
+            <button class="filter-pill" data-filter="-1">Negative</button>
+          </div>
+        </div>
+        <table class="comments-table">
+          <thead>
+            <tr>
+              <th>Comment</th>
+              <th>Sentiment</th>
+            </tr>
+          </thead>
+          <tbody id="commentsBody"></tbody>
+        </table>
+      </section>
+
+    </main>
+
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="{{ url_for('static', filename='analyze.js') }}"></script>
+</body>
+</html>

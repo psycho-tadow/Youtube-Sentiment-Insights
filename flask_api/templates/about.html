@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How it works — Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="{{ url_for('landing') }}" class="site-nav-mark">Signal</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="site-nav-links" id="navLinks">
+    <a href="{{ url_for('analyze_page') }}">Analyzer</a>
+    <a href="{{ url_for('about_page') }}" class="active">How it works</a>
+    <a href="https://github.com/psycho-tadow/Youtube-Sentiment-Insights" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<main class="about-main">
+
+  <header class="about-hero">
+    <p class="eyebrow-line">Under the hood</p>
+    <h1>A small model,<br>run like production software.</h1>
+    <p class="about-hero-sub">
+      Signal isn't just a script that calls a model. It's a full pipeline —
+      data, training, tracking, and deployment — wired together so a new model
+      can ship without anyone touching a server by hand.
+    </p>
+  </header>
+
+  <section class="pipeline-section">
+    <h2>The pipeline</h2>
+    <div class="pipeline">
+
+      <div class="pipeline-node">
+        <div class="pipeline-node-title">Comments in</div>
+        <p>The browser pulls comments straight from the YouTube Data API — no scraping, no stored video data.</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+
+      <div class="pipeline-node">
+        <div class="pipeline-node-title">Preprocessing</div>
+        <p>Text is lowercased, cleaned, and lemmatized — stripped down to the words that carry sentiment.</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+
+      <div class="pipeline-node">
+        <div class="pipeline-node-title">Model scoring</div>
+        <p>A TF-IDF vectorizer feeds a trained classifier that scores each comment positive, neutral, or negative.</p>
+      </div>
+      <div class="pipeline-arrow">→</div>
+
+      <div class="pipeline-node">
+        <div class="pipeline-node-title">Served results</div>
+        <p>Flask returns the scores plus rendered charts — pie split, word cloud, and a monthly trend line.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="mlops-section">
+    <h2>How it's tracked and shipped</h2>
+    <div class="mlops-grid">
+      <div class="mlops-card">
+        <h3>Experiment tracking</h3>
+        <p>Model versions and metrics are logged and registered with MLflow, so the exact model in production is always traceable back to the run that trained it.</p>
+      </div>
+      <div class="mlops-card">
+        <h3>Data & model versioning</h3>
+        <p>Datasets and pipeline stages are versioned with DVC, keeping training reproducible instead of one-off.</p>
+      </div>
+      <div class="mlops-card">
+        <h3>CI/CD</h3>
+        <p>GitHub Actions runs tests and builds on every push, so a broken change never quietly reaches production.</p>
+      </div>
+      <div class="mlops-card">
+        <h3>Deployment</h3>
+        <p>The Flask API is containerized and deployed to an AWS EC2 instance, serving predictions over a simple HTTP interface.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>See it work on a real video.</h2>
+    <a href="{{ url_for('analyze_page') }}" class="btn-primary">Analyze a video</a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Signal</span>
+  <div class="site-footer-links">
+    <a href="https://github.com/psycho-tadow/Youtube-Sentiment-Insights" target="_blank" rel="noopener">GitHub</a>
+    <a href="{{ url_for('about_page') }}">About</a>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

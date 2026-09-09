@@ -76,8 +76,18 @@ model, vectorizer = load_model_and_vectorizer(
 )
 
 @app.route('/')
-def home():
+def landing():
     return render_template('index.html')
+
+
+@app.route('/analyze')
+def analyze_page():
+    return render_template('analyze.html')
+
+
+@app.route('/about')
+def about_page():
+    return render_template('about.html')
 
 
 @app.route('/predict_with_timestamps', methods=['POST'])
@@ -440,4 +450,5 @@ if __name__ == '__main__':
         port=5000,
         debug=True
     )
+
 

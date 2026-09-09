@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signal — YouTube Comment Sentiment</title>
+<title>Signal — know what your comments actually think</title>
+<meta name="description" content="Paste a YouTube video and get a clear read on how people feel in the comments — sentiment breakdown, word cloud, and trend over time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,91 +12,141 @@
 </head>
 <body>
 
-<div class="app">
-
-  <header class="masthead">
-    <div class="masthead-mark">Signal</div>
-    <p class="masthead-sub">Paste a video, read what the comments actually feel.</p>
-  </header>
-
-  <div class="layout">
-
-    <aside class="control-panel">
-      <h2>Analyze a video</h2>
-
-      <div class="field">
-        <label for="videoUrl">YouTube video URL</label>
-        <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=...">
-      </div>
-
-      <div class="field">
-        <label for="apiKey">YouTube Data API key</label>
-        <input id="apiKey" type="password" placeholder="AIza...">
-        <p class="hint">Free from the <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener">Google Cloud Console</a>. Stored only in your browser.</p>
-      </div>
-
-      <div class="field">
-        <label for="maxComments">Comments to pull</label>
-        <select id="maxComments">
-          <option value="50">50</option>
-          <option value="100" selected>100</option>
-          <option value="200">200</option>
-          <option value="500">500</option>
-        </select>
-      </div>
-
-      <button id="analyzeBtn" type="button">Analyze comments</button>
-
-      <div id="status" class="status" role="status"></div>
-    </aside>
-
-    <main class="results" id="results" hidden>
-
-      <section class="summary" id="summary"></section>
-
-      <section class="visuals">
-        <div class="visual-card">
-          <h3>Sentiment split</h3>
-          <img id="chartImg" alt="Sentiment split chart">
-        </div>
-        <div class="visual-card">
-          <h3>Frequent words</h3>
-          <img id="wordcloudImg" alt="Word cloud of comments">
-        </div>
-      </section>
-
-      <section class="trend-section" id="trendSection" hidden>
-        <h3>Sentiment over time</h3>
-        <img id="trendImg" alt="Sentiment trend over time">
-      </section>
-
-      <section class="comments-section">
-        <div class="comments-head">
-          <h3>Comments</h3>
-          <div class="filter-row" id="filterRow">
-            <button class="filter-pill active" data-filter="all">All</button>
-            <button class="filter-pill" data-filter="1">Positive</button>
-            <button class="filter-pill" data-filter="0">Neutral</button>
-            <button class="filter-pill" data-filter="-1">Negative</button>
-          </div>
-        </div>
-        <table class="comments-table">
-          <thead>
-            <tr>
-              <th>Comment</th>
-              <th>Sentiment</th>
-            </tr>
-          </thead>
-          <tbody id="commentsBody"></tbody>
-        </table>
-      </section>
-
-    </main>
-
+<nav class="site-nav">
+  <a href="{{ url_for('landing') }}" class="site-nav-mark">Signal</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="site-nav-links" id="navLinks">
+    <a href="{{ url_for('analyze_page') }}">Analyzer</a>
+    <a href="{{ url_for('about_page') }}">How it works</a>
+    <a href="https://github.com/psycho-tadow/Youtube-Sentiment-Insights" target="_blank" rel="noopener">GitHub</a>
   </div>
+</nav>
 
-</div>
+<main>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+  <!-- ---------- Hero ---------- -->
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow-line">Comment sentiment, in one paste</p>
+      <h1>Know what people<br>actually think —<br>before you read<br>a thousand comments.</h1>
+      <p class="hero-sub">
+        Paste any public YouTube video. Signal pulls the comments, scores every one for
+        sentiment, and shows you the shape of the reaction in seconds.
+      </p>
+      <div class="hero-actions">
+        <a href="{{ url_for('analyze_page') }}" class="btn-primary">Analyze a video</a>
+        <a href="{{ url_for('about_page') }}" class="btn-ghost">See how it works</a>
+      </div>
+      <p class="hero-note">Free to use. No account needed — just a YouTube Data API key.</p>
+    </div>
+
+    <div class="hero-sample" aria-hidden="true">
+      <div class="hero-sample-head">
+        <span class="hero-sample-dot"></span>
+        <span>Example readout</span>
+      </div>
+      <div class="hero-sample-bars">
+        <div class="sample-row">
+          <span class="sample-label">Positive</span>
+          <div class="sample-track"><div class="sample-fill pos" style="width:58%"></div></div>
+          <span class="sample-pct">58%</span>
+        </div>
+        <div class="sample-row">
+          <span class="sample-label">Neutral</span>
+          <div class="sample-track"><div class="sample-fill neu" style="width:27%"></div></div>
+          <span class="sample-pct">27%</span>
+        </div>
+        <div class="sample-row">
+          <span class="sample-label">Negative</span>
+          <div class="sample-track"><div class="sample-fill neg" style="width:15%"></div></div>
+          <span class="sample-pct">15%</span>
+        </div>
+      </div>
+      <div class="hero-sample-comment">
+        <span class="sentiment-badge pos">Positive</span>
+        <p>"honestly didn't expect this to be this good, subscribed"</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- How it works ---------- -->
+  <section class="steps-section" id="how">
+    <h2>From link to insight in three steps.</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-index">01</div>
+        <h3>Paste a video link</h3>
+        <p>Drop in any public YouTube URL and your YouTube Data API key — free from Google Cloud Console.</p>
+      </div>
+      <div class="step">
+        <div class="step-index">02</div>
+        <h3>Comments get scored</h3>
+        <p>Every comment runs through a trained sentiment model — tracked, versioned, and served through MLflow.</p>
+      </div>
+      <div class="step">
+        <div class="step-index">03</div>
+        <h3>Read the shape of it</h3>
+        <p>See the sentiment split, the words people are actually using, and how opinion moved over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Features ---------- -->
+  <section class="features-section">
+    <h2>Everything you need, nothing you have to configure.</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Sentiment breakdown</h3>
+        <p>Positive, neutral, and negative — as a share of the whole conversation, not just a handful of top comments.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Word cloud</h3>
+        <p>See the language people reach for most, once the filler and stopwords are stripped out.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Sentiment over time</h3>
+        <p>Track how reaction shifted month to month — useful for launches, controversies, or slow burns.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Comment-level detail</h3>
+        <p>Filter the full comment list by sentiment and read exactly what's driving the number.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Stack strip ---------- -->
+  <section class="stack-section">
+    <p class="stack-label">Built and shipped as a full MLOps pipeline</p>
+    <div class="stack-chips">
+      <span>LightGBM</span>
+      <span>MLflow</span>
+      <span>DVC</span>
+      <span>Flask</span>
+      <span>Docker</span>
+      <span>GitHub Actions</span>
+      <span>AWS EC2</span>
+    </div>
+    <a href="{{ url_for('about_page') }}" class="stack-link">See the full pipeline →</a>
+  </section>
+
+  <!-- ---------- Closing CTA ---------- -->
+  <section class="cta-section">
+    <h2>Stop skimming comments. Just read the signal.</h2>
+    <a href="{{ url_for('analyze_page') }}" class="btn-primary">Analyze a video</a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Signal</span>
+  <div class="site-footer-links">
+    <a href="https://github.com/psycho-tadow/Youtube-Sentiment-Insights" target="_blank" rel="noopener">GitHub</a>
+    <a href="{{ url_for('about_page') }}">About</a>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
